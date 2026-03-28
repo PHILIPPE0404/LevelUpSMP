@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LevelsUp SMP — Wiki</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f12;
+  --bg2: #131619;
+  --bg3: #1a1d22;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #c8cdd6;
+  --text2: #8b909a;
+  --white: #f0f2f5;
+  --gold: #c9963a;
+  --gold2: #e8b84b;
+  --gold-dim: rgba(201,150,58,0.12);
+  --speed: #e8c84b;
+  --str: #e05252;
+  --res: #5b8de8;
+  --hp: #52c97a;
+  --hyb: #b86be8;
+  --red: #e05252;
+  --sidebar-w: 260px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+
+/* ── LAYOUT ── */
+.layout { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo .logo-title {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold2);
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+.sidebar-logo .logo-sub {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+
+.server-info {
+  margin: 16px 16px 0;
+  background: var(--gold-dim);
+  border: 1px solid rgba(201,150,58,0.25);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.server-info .ip {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--gold2);
+  background: rgba(0,0,0,0.3);
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: block;
+  margin-top: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: all;
+}
+.server-info .ip:hover { background: rgba(0,0,0,0.5); }
+.server-info .ver {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 6px;
+}
+.ver-badge {
+  display: inline-block;
+  background: rgba(82,201,122,0.15);
+  color: var(--hp);
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 20px;
+  border: 1px solid rgba(82,201,122,0.3);
+  margin-left: 4px;
+  font-family: monospace;
+}
+
+.nav { padding: 16px 0 24px; flex: 1; }
+.nav-section { padding: 12px 16px 4px; font-size: 10px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Cinzel', serif; }
+.nav-item {
+  display: block;
+  padding: 7px 16px 7px 24px;
+  font-size: 14px;
+  color: var(--text2);
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+  border-left: 2px solid transparent;
+  font-family: 'Crimson Pro', serif;
+  line-height: 1.3;
+}
+.nav-item:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+.nav-item.active { color: var(--gold2); border-left-color: var(--gold); background: var(--gold-dim); }
+.nav-item.cat-speed { --c: var(--speed); }
+.nav-item.cat-str   { --c: var(--str); }
+.nav-item.cat-res   { --c: var(--res); }
+.nav-item.cat-hp    { --c: var(--hp); }
+.nav-item.cat-hyb   { --c: var(--hyb); }
+.nav-item.cat-speed:hover, .nav-item.cat-speed.active { color: var(--speed); border-left-color: var(--speed); background: rgba(232,200,75,0.06); }
+.nav-item.cat-str:hover,   .nav-item.cat-str.active   { color: var(--str);   border-left-color: var(--str);   background: rgba(224,82,82,0.06); }
+.nav-item.cat-res:hover,   .nav-item.cat-res.active   { color: var(--res);   border-left-color: var(--res);   background: rgba(91,141,232,0.06); }
+.nav-item.cat-hp:hover,    .nav-item.cat-hp.active    { color: var(--hp);    border-left-color: var(--hp);    background: rgba(82,201,122,0.06); }
+.nav-item.cat-hyb:hover,   .nav-item.cat-hyb.active   { color: var(--hyb);  border-left-color: var(--hyb);   background: rgba(184,107,232,0.06); }
+
+/* ── MAIN ── */
+.main { flex: 1; max-width: 860px; padding: 56px 64px 80px; }
+
+/* ── HERO ── */
+.hero {
+  margin-bottom: 56px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold-dim);
+  border: 1px solid rgba(201,150,58,0.3);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  color: var(--gold2);
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.06em;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+}
+.hero h1 span { color: var(--gold2); }
+.hero-desc {
+  font-size: 19px;
+  color: var(--text);
+  max-width: 620px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+.hero-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 32px;
+}
+.hero-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  transition: border-color 0.2s;
+}
+.hero-card:hover { border-color: var(--border2); }
+.hero-card .label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; font-family: 'Cinzel', serif; }
+.hero-card .value { font-size: 15px; color: var(--white); font-weight: 600; font-family: monospace; }
+.hero-card .value.green { color: var(--hp); }
+
+/* ── SECTIONS ── */
+section { margin-bottom: 56px; scroll-margin-top: 32px; }
+h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.03em;
+}
+h2 .ico { margin-right: 10px; font-size: 18px; }
+h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+  margin: 28px 0 12px;
+  letter-spacing: 0.02em;
+}
+p { margin-bottom: 14px; color: var(--text); }
+strong { color: var(--white); font-weight: 600; }
+
+/* ── POINT CARDS ── */
+.point-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+.point-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  transition: border-color 0.2s;
+}
+.point-card:hover { border-color: var(--border2); }
+.point-card .pc-label { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.point-card .pc-val { font-size: 14px; color: var(--text); line-height: 1.6; }
+.badge { display: inline-block; padding: 1px 8px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.badge.gold  { background: rgba(201,150,58,0.2);  color: var(--gold2); }
+.badge.green { background: rgba(82,201,122,0.15); color: var(--hp); }
+.badge.red   { background: rgba(224,82,82,0.15);  color: var(--red); }
+.badge.blue  { background: rgba(91,141,232,0.15); color: var(--res); }
+.badge.purple{ background: rgba(184,107,232,0.15);color: var(--hyb); }
+
+/* ── SKILL CATEGORY ── */
+.cat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  margin-top: 28px;
+}
+.cat-header .cat-icon { font-size: 20px; }
+.cat-header .cat-name { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 600; }
+.cat-header .cat-desc { font-size: 13px; color: var(--text2); margin-left: auto; }
+.cat-speed { background: rgba(232,200,75,0.06); border-color: rgba(232,200,75,0.2); }
+.cat-str   { background: rgba(224,82,82,0.06);  border-color: rgba(224,82,82,0.2); }
+.cat-res   { background: rgba(91,141,232,0.06); border-color: rgba(91,141,232,0.2); }
+.cat-hp    { background: rgba(82,201,122,0.06); border-color: rgba(82,201,122,0.2); }
+.cat-hyb   { background: rgba(184,107,232,0.06);border-color: rgba(184,107,232,0.2); }
+.cat-speed .cat-name { color: var(--speed); }
+.cat-str   .cat-name { color: var(--str); }
+.cat-res   .cat-name { color: var(--res); }
+.cat-hp    .cat-name { color: var(--hp); }
+.cat-hyb   .cat-name { color: var(--hyb); }
+
+/* ── SKILL TABLE ── */
+.skill-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  font-size: 14px;
+}
+.skill-table th {
+  background: var(--bg3);
+  color: var(--text2);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.skill-table td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  color: var(--text);
+  line-height: 1.4;
+}
+.skill-table tr:last-child td { border-bottom: none; }
+.skill-table tr:hover td { background: rgba(255,255,255,0.02); }
+.skill-table tr.legendary td { background: rgba(201,150,58,0.05); }
+.skill-table tr.legendary:hover td { background: rgba(201,150,58,0.09); }
+.skill-name { color: var(--white); font-weight: 600; }
+.skill-name .leg-star { color: var(--gold2); margin-right: 4px; }
+.tier-stars { color: var(--gold); font-size: 11px; letter-spacing: -1px; }
+.cost-badge {
+  display: inline-block;
+  background: var(--gold-dim);
+  color: var(--gold2);
+  border: 1px solid rgba(201,150,58,0.25);
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.prereq { font-size: 13px; color: var(--text2); }
+.active-badge {
+  display: inline-block;
+  background: rgba(91,141,232,0.15);
+  color: var(--res);
+  border: 1px solid rgba(91,141,232,0.3);
+  border-radius: 4px;
+  font-size: 11px;
+  padding: 1px 6px;
+  margin-left: 6px;
+  font-family: monospace;
+  letter-spacing: 0.03em;
+}
+
+/* ── COMMAND TABLE ── */
+.cmd-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+.cmd-table tr { border-bottom: 1px solid var(--border); }
+.cmd-table tr:last-child { border-bottom: none; }
+.cmd-table td { padding: 10px 12px; vertical-align: top; }
+.cmd-table td:first-child { width: 45%; }
+code {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border2);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--gold2);
+  white-space: nowrap;
+}
+
+/* ── CALLOUT ── */
+.callout {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 20px 0;
+  font-size: 15px;
+  color: var(--text);
+}
+.callout.info { border-left-color: var(--res); }
+.callout.warn { border-left-color: var(--red); }
+.callout.tip  { border-left-color: var(--hp); }
+.callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── PAPI TABLE ── */
+.papi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 16px 0;
+}
+.papi-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.papi-item code { font-size: 12px; }
+.papi-item .pi-desc { font-size: 13px; color: var(--text2); }
+
+/* ── SCROLL REVEAL ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero { animation: fadeUp 0.5s ease both; }
+section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { padding: 32px 24px 60px; }
+  .hero h1 { font-size: 28px; }
+  .hero-cards { grid-template-columns: 1fr 1fr; }
+  .point-grid { grid-template-columns: 1fr; }
+  .papi-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-title">⚔ LevelsUp SMP</div>
+      <div class="logo-sub">Wiki Officiel</div>
+    </div>
+
+    <div class="server-info">
+      <div class="ver">Serveur <span class="ver-badge">1.20.4</span></div>
+      <code class="ip" title="Cliquez pour copier" onclick="navigator.clipboard.writeText('iplevelsupsmp.falixsrv.me');this.textContent='✓ Copié !';setTimeout(()=>this.textContent='iplevelsupsmp.falixsrv.me',2000)">iplevelsupsmp.falixsrv.me</code>
+    </div>
+
+    <div class="nav">
+      <div class="nav-section">Général</div>
+      <a href="#presentation" class="nav-item active">Présentation</a>
+      <a href="#connexion" class="nav-item">Connexion</a>
+      <a href="#points" class="nav-item">Système de points</a>
+
+      <div class="nav-section">Compétences</div>
+      <a href="#vitesse"    class="nav-item cat-speed">⚡ Vitesse</a>
+      <a href="#force"      class="nav-item cat-str">⚔ Force</a>
+      <a href="#resistance" class="nav-item cat-res">🛡 Résistance</a>
+      <a href="#sante"      class="nav-item cat-hp">❤ Santé</a>
+      <a href="#hybride"    class="nav-item cat-hyb">✨ Hybride</a>
+
+      <div class="nav-section">Référence</div>
+      <a href="#commandes" class="nav-item">Commandes</a>
+      <a href="#technique" class="nav-item">Infos techniques</a>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero" id="presentation">
+      <div class="hero-badge">⚔ Wiki Officiel</div>
+      <h1>LevelsUp <span>SMP</span></h1>
+      <p class="hero-desc">Un serveur Minecraft Survie PvP où chaque kill te rend plus fort. Tue des joueurs, gagne des points, débloque des compétences permanentes et deviens le joueur le plus redoutable du serveur.</p>
+      <div class="hero-cards">
+        <div class="hero-card">
+          <div class="label">Version</div>
+          <div class="value green">1.20.4</div>
+        </div>
+        <div class="hero-card">
+          <div class="label">IP du serveur</div>
+          <div class="value" style="font-size:12px;cursor:pointer;" onclick="navigator.clipboard.writeText('iplevelsupsmp.falixsrv.me');this.textContent='✓ Copié !';setTimeout(()=>this.textContent='iplevelsupsmp.falixsrv.me',2000)">iplevelsupsmp.falixsrv.me</div>
+        </div>
+        <div class="hero-card">
+          <div class="label">Plugin</div>
+          <div class="value">LevelsUp SMP v2.0.0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONNEXION -->
+    <section id="connexion">
+      <h2><span class="ico">🖥</span>Connexion au serveur</h2>
+      <p>Pour rejoindre le serveur, ouvre Minecraft Java Edition version <strong>1.20.4</strong>, va dans <strong>Multijoueur</strong> et ajoute le serveur avec l'IP suivante :</p>
+      <div class="callout info">
+        <span class="callout-icon">🖥</span>
+        <span><strong>IP :</strong> <code>iplevelsupsmp.falixsrv.me</code> — cliquez pour copier dans la sidebar ou sur l'IP du hero.</span>
+      </div>
+      <p>Le serveur tourne en mode <strong>Survie PvP</strong>. Le PvP est actif partout — faites attention à vos arrières !</p>
+    </section>
+
+    <!-- POINTS -->
+    <section id="points">
+      <h2><span class="ico">💰</span>Système de points</h2>
+      <p>Les points sont la monnaie du plugin. Tu en gagnes en jouant et tu les dépenses dans l'arbre de compétences via <code>/skills</code>.</p>
+
+      <h3>Gagner des points</h3>
+      <div class="point-grid">
+        <div class="point-card">
+          <div class="pc-label">⚔ Kill PvP <span class="badge green">+1 pt</span></div>
+          <div class="pc-val">Tuer un joueur en combat rapporte un point complet.</div>
+        </div>
+        <div class="point-card">
+          <div class="pc-label">🤝 Assist <span class="badge blue">+0.5 pt</span></div>
+          <div class="pc-val">Blesser un joueur tué par quelqu'un d'autre dans les 10 secondes suivantes.</div>
+        </div>
+        <div class="point-card">
+          <div class="pc-label">🔥 Streak <span class="badge gold">×2</span></div>
+          <div class="pc-val">À partir de 3 kills consécutifs sans mourir, tous tes gains de points sont doublés.</div>
+        </div>
+        <div class="point-card">
+          <div class="pc-label">🌟 Weekend <span class="badge gold">×2</span></div>
+          <div class="pc-val">Double points automatiques chaque samedi et dimanche. Peut aussi être activé par un admin.</div>
+        </div>
+      </div>
+
+      <h3>Perdre des points</h3>
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <span>Mourir en PvP te coûte <strong>2 points</strong> et remet ton streak à zéro. Protège tes points !</span>
+      </div>
+
+      <h3>Reset de compétences</h3>
+      <p>Tu peux réinitialiser toutes tes compétences depuis le menu <code>/skills</code> en faisant un <strong>clic droit</strong> sur la barrière rouge. Cela coûte <strong>10 points</strong>.</p>
+    </section>
+
+    <!-- COMPÉTENCES -->
+    <section id="skills-intro">
+      <h2><span class="ico">🌳</span>Arbre de compétences</h2>
+      <p>L'arbre est accessible via <code>/skills</code>. Il contient <strong>25 compétences</strong> réparties en 5 catégories, organisées en tiers de 1 à 5. Il faut débloquer les tiers inférieurs avant d'accéder aux suivants.</p>
+      <div class="callout">
+        <span class="callout-icon">⭐</span>
+        <span>Les compétences <strong>Légendaires (Tier 5)</strong> nécessitent d'avoir effectué au moins <strong>50 kills</strong> sur le serveur pour être débloquées, en plus du coût en points.</span>
+      </div>
+    </section>
+
+    <!-- VITESSE -->
+    <section id="vitesse">
+      <h2><span class="ico">⚡</span>Vitesse</h2>
+      <p>Augmente ta vitesse de déplacement. Idéal pour fuir, rattraper un adversaire ou surprendre un ennemi.</p>
+
+      <div class="cat-header cat-speed">
+        <span class="cat-icon">⚡</span>
+        <span class="cat-name">Vitesse</span>
+        <span class="cat-desc">6 compétences — jusqu'à +50%</span>
+      </div>
+      <table class="skill-table">
+        <thead><tr><th>Compétence</th><th>Effet</th><th>Coût</th><th>Tier</th><th>Prérequis</th></tr></thead>
+        <tbody>
+          <tr><td><span class="skill-name">Pas Léger</span></td><td>+10% vitesse de déplacement</td><td><span class="cost-badge">1 pt</span></td><td><span class="tier-stars">★</span></td><td class="prereq">—</td></tr>
+          <tr><td><span class="skill-name">Course Rapide</span></td><td>+20% vitesse de déplacement</td><td><span class="cost-badge">2 pts</span></td><td><span class="tier-stars">★★</span></td><td class="prereq">Pas Léger</td></tr>
+          <tr><td><span class="skill-name">Vent du Nord</span></td><td>+30% vitesse de déplacement</td><td><span class="cost-badge">3 pts</span></td><td><span class="tier-stars">★★★</span></td><td class="prereq">Course Rapide</td></tr>
+          <tr><td><span class="skill-name">Sprint Éternel</span></td><td>Pas de perte de faim en sprint</td><td><span class="cost-badge">3 pts</span></td><td><span class="tier-stars">★★★</span></td><td class="prereq">Course Rapide</td></tr>
+          <tr><td><span class="skill-name">Foudre</span></td><td>+50% vitesse (maximum)</td><td><span class="cost-badge">5 pts</span></td><td><span class="tier-stars">★★★★</span></td><td class="prereq">Vent du Nord + Sprint Éternel</td></tr>
+          <tr class="legendary"><td><span class="skill-name"><span class="leg-star">★</span>Éclair</span><span class="active-badge">ACTIF</span></td><td>×2 vitesse pendant 5s — CD 30s</td><td><span class="cost-badge">8 pts</span></td><td><span class="tier-stars">★★★★★</span></td><td class="prereq">Foudre + 50 kills</td></tr>
+        </tbody>
+      </table>
+      <div class="callout tip" style="margin-top:12px;">
+        <span class="callout-icon">💡</span>
+        <span>Pour activer Éclair : <code>/skilluse speed_6</code></span>
+      </div>
+    </section>
+
+    <!-- FORCE -->
+    <section id="force">
+      <h2><span class="ico">⚔</span>Force</h2>
+      <p>Augmente tes dégâts en mêlée. Le chemin du guerrier offensif pur.</p>
+
+      <div class="cat-header cat-str">
+        <span class="cat-icon">⚔</span>
+        <span class="cat-name">Force</span>
+        <span class="cat-desc">6 compétences — jusqu'à +40%</span>
+      </div>
+      <table class="skill-table">
+        <thead><tr><th>Compétence</th><th>Effet</th><th>Coût</th><th>Tier</th><th>Prérequis</th></tr></thead>
+        <tbody>
+          <tr><td><span class="skill-name">Poings Durs</span></td><td>+5% dégâts en mêlée</td><td><span class="cost-badge">1 pt</span></td><td><span class="tier-stars">★</span></td><td class="prereq">—</td></tr>
+          <tr><td><span class="skill-name">Bravoure</span></td><td>+15% dégâts en mêlée</td><td><span class="cost-badge">2 pts</span></td><td><span class="tier-stars">★★</span></td><td class="prereq">Poings Durs</td></tr>
+          <tr><td><span class="skill-name">Lame Tranchante</span></td><td>+25% dégâts en mêlée</td><td><span class="cost-badge">3 pts</span></td><td><span class="tier-stars">★★★</span></td><td class="prereq">Bravoure</td></tr>
+          <tr><td><span class="skill-name">Coup Critique</span></td><td>+20% chance de coup critique (×1.5 dégâts)</td><td><span class="cost-badge">3 pts</span></td><td><span class="tier-stars">★★★</span></td><td class="prereq">Bravoure</td></tr>
+          <tr><td><span class="skill-name">Berserker</span></td><td>+40% dégâts (maximum)</td><td><span class="cost-badge">5 pts</span></td><td><span class="tier-stars">★★★★</span></td><td class="prereq">Lame Tranchante + Coup Critique</td></tr>
+          <tr class="legendary"><td><span class="skill-name"><span class="leg-star">★</span>Rage</span><span class="active-badge">ACTIF</span></td><td>+100% dégâts pendant 4s — CD 45s</td><td><span class="cost-badge">8 pts</span></td><td><span class="tier-stars">★★★★★</span></td><td class="prereq">Berserker + 50 kills</td></tr>
+        </tbody>
+      </table>
+      <div class="callout tip" style="margin-top:12px;">
+        <span class="callout-icon">💡</span>
+        <span>Pour activer Rage : <code>/skilluse str_6</code></span>
+      </div>
+    </section>
+
+    <!-- RÉSISTANCE -->
+    <section id="resistance">
+      <h2><span class="ico">🛡</span>Résistance</h2>
+      <p>Réduit les dégâts que tu reçois et améliore ta survie en combat prolongé.</p>
+
+      <div class="cat-header cat-res">
+        <span class="cat-icon">🛡</span>
+        <span class="cat-name">Résistance</span>
+        <span class="cat-desc">6 compétences — jusqu'à −40%</span>
+      </div>
+      <table class="skill-table">
+        <thead><tr><th>Compétence</th><th>Effet</th><th>Coût</th><th>Tier</th><th>Prérequis</th></tr></thead>
+        <tbody>
+          <tr><td><span class="skill-name">Peau Dure</span></td><td>−5% dégâts reçus</td><td><span class="cost-badge">1 pt</span></td><td><span class="tier-stars">★</span></td><td class="prereq">—</td></tr>
+          <tr><td><span class="skill-name">Armure Naturelle</span></td><td>−15% dégâts reçus</td><td><span class="cost-badge">2 pts</span></td><td><span class="tier-stars">★★</span></td><td class="prereq">Peau Dure</td></tr>
+          <tr><td><span class="skill-name">Bouclier Divin</span></td><td>−25% dégâts reçus</td><td><span class="cost-badge">3 pts</span></td><td><span class="tier-stars">★★★</span></td><td class="prereq">Armure Naturelle</td></tr>
+          <tr><td><span class="skill-name">Régénération</span></td><td>+1 PV toutes les 10 secondes</td><td><span class="cost-badge">3 pts</span></td><td><span class="tier-stars">★★★</span></td><td class="prereq">Armure Naturelle</td></tr>
+          <tr><td><span class="skill-name">Immortel</span></td><td>−40% dégâts reçus (maximum)</td><td><span class="cost-badge">5 pts</span></td><td><span class="tier-stars">★★★★</span></td><td class="prereq">Bouclier Divin + Régénération</td></tr>
+          <tr class="legendary"><td><span class="skill-name"><span class="leg-star">★</span>Bouclier</span><span class="active-badge">ACTIF</span></td><td>Immunité totale pendant 3s — CD 60s</td><td><span class="cost-badge">8 pts</span></td><td><span class="tier-stars">★★★★★</span></td><td class="prereq">Immortel + 50 kills</td></tr>
+        </tbody>
+      </table>
+      <div class="callout tip" style="margin-top:12px;">
+        <span class="callout-icon">💡</span>
+        <span>Pour activer Bouclier : <code>/skilluse res_6</code></span>
+      </div>
+    </section>
+
+    <!-- SANTÉ -->
+    <section id="sante">
+      <h2><span class="ico">❤</span>Santé</h2>
+      <p>Augmente ta vie maximum et ta régénération. Indispensable pour encaisser les combats prolongés.</p>
+
+      <div class="cat-header cat-hp">
+        <span class="cat-icon">❤</span>
+        <span class="cat-name">Santé</span>
+        <span class="cat-desc">6 compétences — jusqu'à +10 PV max</span>
+      </div>
+      <table class="skill-table">
+        <thead><tr><th>Compétence</th><th>Effet</th><th>Coût</th><th>Tier</th><th>Prérequis</th></tr></thead>
+        <tbody>
+          <tr><td><span class="skill-name">Vigueur</span></td><td>+2 PV maximum</td><td><span class="cost-badge">1 pt</span></td><td><span class="tier-stars">★</span></td><td class="prereq">—</td></tr>
+          <tr><td><span class="skill-name">Endurance</span></td><td>+4 PV maximum</td><td><span class="cost-badge">2 pts</span></td><td><span class="tier-stars">★★</span></td><td class="prereq">Vigueur</td></tr>
+          <tr><td><span class="skill-name">Vitalité</span></td><td>+6 PV maximum</td><td><span class="cost-badge">3 pts</span></td><td><span class="tier-stars">★★★</span></td><td class="prereq">Endurance</td></tr>
+          <tr><td><span class="skill-name">Saturation</span></td><td>Régénération 50% plus rapide</td><td><span class="cost-badge">3 pts</span></td><td><span class="tier-stars">★★★</span></td><td class="prereq">Endurance</td></tr>
+          <tr><td><span class="skill-name">Titan</span></td><td>+10 PV maximum (maximum)</td><td><span class="cost-badge">5 pts</span></td><td><span class="tier-stars">★★★★</span></td><td class="prereq">Vitalité + Saturation</td></tr>
+          <tr class="legendary"><td><span class="skill-name"><span class="leg-star">★</span>Phœnix</span><span class="active-badge">ACTIF</span></td><td>Soin total instantané — CD 60s</td><td><span class="cost-badge">8 pts</span></td><td><span class="tier-stars">★★★★★</span></td><td class="prereq">Titan + 50 kills</td></tr>
+        </tbody>
+      </table>
+      <div class="callout tip" style="margin-top:12px;">
+        <span class="callout-icon">💡</span>
+        <span>Pour activer Phœnix : <code>/skilluse hp_6</code></span>
+      </div>
+    </section>
+
+    <!-- HYBRIDE -->
+    <section id="hybride">
+      <h2><span class="ico">✨</span>Hybride</h2>
+      <p>Compétences spéciales combinant plusieurs attributs à la fois. Elles nécessitent des prérequis dans d'autres catégories et sont plus chères, mais particulièrement puissantes.</p>
+
+      <div class="cat-header cat-hyb">
+        <span class="cat-icon">✨</span>
+        <span class="cat-name">Hybride</span>
+        <span class="cat-desc">4 compétences combinées</span>
+      </div>
+      <table class="skill-table">
+        <thead><tr><th>Compétence</th><th>Effet</th><th>Coût</th><th>Prérequis</th></tr></thead>
+        <tbody>
+          <tr><td><span class="skill-name">Guerrier</span></td><td>+10% dégâts &amp; −10% dégâts reçus</td><td><span class="cost-badge">4 pts</span></td><td class="prereq">Bravoure + Armure Naturelle</td></tr>
+          <tr><td><span class="skill-name">Assassin</span></td><td>+15% vitesse &amp; +15% dégâts</td><td><span class="cost-badge">4 pts</span></td><td class="prereq">Course Rapide + Bravoure</td></tr>
+          <tr><td><span class="skill-name">TankMage</span></td><td>+8 PV max &amp; −15% dégâts reçus</td><td><span class="cost-badge">4 pts</span></td><td class="prereq">Endurance + Armure Naturelle</td></tr>
+          <tr class="legendary"><td><span class="skill-name"><span class="leg-star">★</span>Légionnaire</span></td><td>+10% vitesse, dégâts, résistance et vie simultanément</td><td><span class="cost-badge">10 pts</span></td><td class="prereq">Guerrier + Assassin + TankMage + 50 kills</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- COMMANDES -->
+    <section id="commandes">
+      <h2><span class="ico">📋</span>Commandes</h2>
+
+      <h3>Commandes joueur</h3>
+      <table class="cmd-table">
+        <tr><td><code>/skills</code></td><td>Ouvre l'arbre de compétences en GUI</td></tr>
+        <tr><td><code>/points [joueur]</code></td><td>Affiche les stats d'un joueur : points, kills, morts, assists, KDR, streak</td></tr>
+        <tr><td><code>/top</code></td><td>Classement Top 10 kills et Top 10 points du serveur</td></tr>
+        <tr><td><code>/skilluse &lt;id&gt;</code></td><td>Active une compétence légendaire active (voir IDs ci-dessous)</td></tr>
+      </table>
+
+      <h3>IDs des compétences actives</h3>
+      <div class="papi-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+        <div class="papi-item"><code>speed_6</code><span class="pi-desc">Éclair — vitesse ×2 / 5s</span></div>
+        <div class="papi-item"><code>str_6</code><span class="pi-desc">Rage — dégâts ×2 / 4s</span></div>
+        <div class="papi-item"><code>res_6</code><span class="pi-desc">Bouclier — immunité / 3s</span></div>
+        <div class="papi-item"><code>hp_6</code><span class="pi-desc">Phœnix — soin total</span></div>
+      </div>
+
+      <h3>Commandes administrateur</h3>
+      <div class="callout info">
+        <span class="callout-icon">🔒</span>
+        <span>Ces commandes nécessitent la permission <code>levelsup.admin</code> (opérateur par défaut).</span>
+      </div>
+      <table class="cmd-table">
+        <tr><td><code>/resetskills &lt;joueur&gt;</code></td><td>Réinitialise toutes les compétences d'un joueur</td></tr>
+        <tr><td><code>/givepoints &lt;joueur&gt; &lt;n&gt;</code></td><td>Donne un nombre de points à un joueur</td></tr>
+        <tr><td><code>/doublepoints [on|off]</code></td><td>Active ou désactive les double points manuellement</td></tr>
+      </table>
+    </section>
+
+    <!-- TECHNIQUE -->
+    <section id="technique">
+      <h2><span class="ico">⚙</span>Infos techniques</h2>
+
+      <h3>Sauvegarde</h3>
+      <p>Les données de chaque joueur sont sauvegardées automatiquement toutes les <strong>5 minutes</strong> et à chaque déconnexion, dans des fichiers <code>.yml</code> individuels.</p>
+
+      <h3>PlaceholderAPI</h3>
+      <p>Le plugin est compatible <strong>PlaceholderAPI</strong>. Tu peux utiliser ces placeholders dans un scoreboard, une tablist ou tout autre plugin compatible :</p>
+      <div class="papi-grid">
+        <div class="papi-item"><code>%levelsup_points%</code><span class="pi-desc">Points disponibles</span></div>
+        <div class="papi-item"><code>%levelsup_kills%</code><span class="pi-desc">Nombre de kills totaux</span></div>
+        <div class="papi-item"><code>%levelsup_deaths%</code><span class="pi-desc">Nombre de morts</span></div>
+        <div class="papi-item"><code>%levelsup_kdr%</code><span class="pi-desc">Ratio kills/morts</span></div>
+        <div class="papi-item"><code>%levelsup_streak%</code><span class="pi-desc">Streak de kills actuel</span></div>
+        <div class="papi-item"><code>%levelsup_skills%</code><span class="pi-desc">Nombre de compétences</span></div>
+        <div class="papi-item"><code>%levelsup_doublepoints%</code><span class="pi-desc">OUI ou NON</span></div>
+        <div class="papi-item"><code>%levelsup_beststreak%</code><span class="pi-desc">Meilleur streak</span></div>
+      </div>
+
+      <h3>Compatibilité</h3>
+      <div class="point-grid">
+        <div class="point-card">
+          <div class="pc-label">Serveur</div>
+          <div class="pc-val">Spigot / Paper <strong>1.20.4</strong></div>
+        </div>
+        <div class="point-card">
+          <div class="pc-label">Java</div>
+          <div class="pc-val">Java <strong>17</strong> ou supérieur</div>
+        </div>
+        <div class="point-card">
+          <div class="pc-label">PlaceholderAPI</div>
+          <div class="pc-val">Optionnel — auto-détecté</div>
+        </div>
+        <div class="point-card">
+          <div class="pc-label">Plugin version</div>
+          <div class="pc-val">LevelsUp SMP <strong>v2.0.0</strong></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+const items = document.querySelectorAll('.nav-item');
+const sections = document.querySelectorAll('section, .hero');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      items.forEach(i => i.classList.remove('active'));
+      const id = e.target.id;
+      const link = document.querySelector('.nav-item[href="#' + id + '"]');
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.25 });
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
