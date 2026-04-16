@@ -87,9 +87,12 @@ body {
   font-size: 12px;
   color: var(--gold2);
   background: rgba(0,0,0,0.3);
+  border: none;
   padding: 4px 8px;
   border-radius: 4px;
   display: block;
+  width: 100%;
+  text-align: left;
   margin-top: 4px;
   cursor: pointer;
   transition: background 0.2s;
@@ -113,8 +116,8 @@ body {
   font-family: monospace;
 }
 
-.nav { padding: 16px 0 24px; flex: 1; }
 .nav-section { padding: 12px 16px 4px; font-size: 10px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Cinzel', serif; }
+.nav-section:first-of-type { margin-top: 16px; }
 .nav-item {
   display: block;
   padding: 7px 16px 7px 24px;
@@ -184,6 +187,7 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-top: 32px;
+  list-style: none;
 }
 .hero-card {
   background: var(--bg3);
@@ -196,6 +200,7 @@ body {
 .hero-card .label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; font-family: 'Cinzel', serif; }
 .hero-card .value { font-size: 15px; color: var(--white); font-weight: 600; font-family: monospace; }
 .hero-card .value.green { color: var(--hp); }
+.hero-card .value.ip { font-size: 12px; cursor: pointer; }
 
 /* ── SECTIONS ── */
 section { margin-bottom: 56px; scroll-margin-top: 32px; }
@@ -227,6 +232,7 @@ strong { color: var(--white); font-weight: 600; }
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin: 20px 0;
+  list-style: none;
 }
 .point-card {
   background: var(--bg3);
@@ -330,17 +336,18 @@ strong { color: var(--white); font-weight: 600; }
   letter-spacing: 0.03em;
 }
 
-/* ── COMMAND TABLE ── */
-.cmd-table {
-  width: 100%;
-  border-collapse: collapse;
+/* ── COMMAND LIST ── */
+.cmd-list {
   margin: 16px 0;
   font-size: 14px;
 }
-.cmd-table tr { border-bottom: 1px solid var(--border); }
-.cmd-table tr:last-child { border-bottom: none; }
-.cmd-table td { padding: 10px 12px; vertical-align: top; }
-.cmd-table td:first-child { width: 45%; }
+.cmd-list .cmd-entry {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+.cmd-list .cmd-entry:last-child { border-bottom: none; }
+.cmd-list dt { padding: 10px 12px; vertical-align: top; width: 45%; flex-shrink: 0; }
+.cmd-list dd { padding: 10px 12px; vertical-align: top; margin: 0; }
 code {
   background: rgba(0,0,0,0.4);
   border: 1px solid var(--border2);
@@ -369,6 +376,7 @@ code {
 .callout.info { border-left-color: var(--res); }
 .callout.warn { border-left-color: var(--red); }
 .callout.tip  { border-left-color: var(--hp); }
+.callout.tip-skill { margin-top: 12px; }
 .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
 
 /* ── PAPI TABLE ── */
@@ -377,7 +385,9 @@ code {
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   margin: 16px 0;
+  list-style: none;
 }
+.papi-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
 .papi-item {
   background: var(--bg3);
   border: 1px solid var(--border);
@@ -414,68 +424,66 @@ section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
 <div class="layout">
 
   <!-- SIDEBAR -->
-  <nav class="sidebar">
-    <div class="sidebar-logo">
+  <nav class="sidebar" aria-label="Navigation principale">
+    <header class="sidebar-logo">
       <div class="logo-title">⚔ LevelsUp SMP</div>
       <div class="logo-sub">Wiki Officiel</div>
-    </div>
+    </header>
 
-    <div class="server-info">
+    <section class="server-info">
       <div class="ver">Serveur <span class="ver-badge">1.20.4</span></div>
-      <code class="ip" title="Cliquez pour copier" onclick="navigator.clipboard.writeText('iplevelsupsmp.falixsrv.me');this.textContent='✓ Copié !';setTimeout(()=>this.textContent='iplevelsupsmp.falixsrv.me',2000)">iplevelsupsmp.falixsrv.me</code>
-    </div>
+      <button class="ip" type="button" title="Cliquez pour copier" onclick="copyIP(this)">iplevelsupsmp.falixsrv.me</button>
+    </section>
 
-    <div class="nav">
-      <div class="nav-section">Général</div>
-      <a href="#presentation" class="nav-item active">Présentation</a>
-      <a href="#connexion" class="nav-item">Connexion</a>
-      <a href="#points" class="nav-item">Système de points</a>
+    <div class="nav-section">Général</div>
+    <a href="#presentation" class="nav-item active">Présentation</a>
+    <a href="#connexion" class="nav-item">Connexion</a>
+    <a href="#points" class="nav-item">Système de points</a>
 
-      <div class="nav-section">Compétences</div>
-      <a href="#vitesse"    class="nav-item cat-speed">⚡ Vitesse</a>
-      <a href="#force"      class="nav-item cat-str">⚔ Force</a>
-      <a href="#resistance" class="nav-item cat-res">🛡 Résistance</a>
-      <a href="#sante"      class="nav-item cat-hp">❤ Santé</a>
-      <a href="#hybride"    class="nav-item cat-hyb">✨ Hybride</a>
+    <div class="nav-section">Compétences</div>
+    <a href="#vitesse"    class="nav-item cat-speed">⚡ Vitesse</a>
+    <a href="#force"      class="nav-item cat-str">⚔ Force</a>
+    <a href="#resistance" class="nav-item cat-res">🛡 Résistance</a>
+    <a href="#sante"      class="nav-item cat-hp">❤ Santé</a>
+    <a href="#hybride"    class="nav-item cat-hyb">✨ Hybride</a>
 
-      <div class="nav-section">Référence</div>
-      <a href="#commandes" class="nav-item">Commandes</a>
-      <a href="#technique" class="nav-item">Infos techniques</a>
-    </div>
+    <div class="nav-section">Référence</div>
+    <a href="#commandes" class="nav-item">Commandes</a>
+    <a href="#technique" class="nav-item">Infos techniques</a>
   </nav>
 
   <!-- MAIN -->
   <main class="main">
 
     <!-- HERO -->
-    <div class="hero" id="presentation">
+    <header class="hero" id="presentation">
       <div class="hero-badge">⚔ Wiki Officiel</div>
       <h1>LevelsUp <span>SMP</span></h1>
       <p class="hero-desc">Un serveur Minecraft Survie PvP où chaque kill te rend plus fort. Tue des joueurs, gagne des points, débloque des compétences permanentes et deviens le joueur le plus redoutable du serveur.</p>
-      <div class="hero-cards">
-        <div class="hero-card">
+      <ul class="hero-cards">
+        <li class="hero-card">
           <div class="label">Version</div>
           <div class="value green">1.20.4</div>
-        </div>
-        <div class="hero-card">
+        </li>
+        <li class="hero-card">
           <div class="label">IP du serveur</div>
-          <div class="value" style="font-size:12px;cursor:pointer;" onclick="navigator.clipboard.writeText('iplevelsupsmp.falixsrv.me');this.textContent='✓ Copié !';setTimeout(()=>this.textContent='iplevelsupsmp.falixsrv.me',2000)">iplevelsupsmp.falixsrv.me</div>
-        </div>
-        <div class="hero-card">
+          <div class="value ip" role="button" tabindex="0" onclick="copyIP(this)">iplevelsupsmp.falixsrv.me</div>
+        </li>
+        <li class="hero-card">
           <div class="label">Plugin</div>
           <div class="value">LevelsUp SMP v2.0.0</div>
-        </div>
-      </div>
-    </div>
+        </li>
+      </ul>
+    </header>
 
     <!-- CONNEXION -->
     <section id="connexion">
       <h2><span class="ico">🖥</span>Connexion au serveur</h2>
       <p>Pour rejoindre le serveur, ouvre Minecraft Java Edition version <strong>1.20.4</strong>, va dans <strong>Multijoueur</strong> et ajoute le serveur avec l'IP suivante :</p>
-      <div class="callout info">
+      <aside class="callout info">
         <span class="callout-icon">🖥</span>
         <span><strong>IP :</strong> <code>iplevelsupsmp.falixsrv.me</code> — cliquez pour copier dans la sidebar ou sur l'IP du hero.</span>
-      </div>
+      </aside>
       <p>Le serveur tourne en mode <strong>Survie PvP</strong>. Le PvP est actif partout — faites attention à vos arrières !</p>
     </section>
 
@@ -485,30 +493,30 @@ section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
       <p>Les points sont la monnaie du plugin. Tu en gagnes en jouant et tu les dépenses dans l'arbre de compétences via <code>/skills</code>.</p>
 
       <h3>Gagner des points</h3>
-      <div class="point-grid">
-        <div class="point-card">
+      <ul class="point-grid">
+        <li class="point-card">
           <div class="pc-label">⚔ Kill PvP <span class="badge green">+1 pt</span></div>
           <div class="pc-val">Tuer un joueur en combat rapporte un point complet.</div>
-        </div>
-        <div class="point-card">
+        </li>
+        <li class="point-card">
           <div class="pc-label">🤝 Assist <span class="badge blue">+0.5 pt</span></div>
           <div class="pc-val">Blesser un joueur tué par quelqu'un d'autre dans les 10 secondes suivantes.</div>
-        </div>
-        <div class="point-card">
+        </li>
+        <li class="point-card">
           <div class="pc-label">🔥 Streak <span class="badge gold">×2</span></div>
           <div class="pc-val">À partir de 3 kills consécutifs sans mourir, tous tes gains de points sont doublés.</div>
-        </div>
-        <div class="point-card">
+        </li>
+        <li class="point-card">
           <div class="pc-label">🌟 Weekend <span class="badge gold">×2</span></div>
           <div class="pc-val">Double points automatiques chaque samedi et dimanche. Peut aussi être activé par un admin.</div>
-        </div>
-      </div>
+        </li>
+      </ul>
 
       <h3>Perdre des points</h3>
-      <div class="callout warn">
+      <aside class="callout warn">
         <span class="callout-icon">⚠️</span>
         <span>Mourir en PvP te coûte <strong>2 points</strong> et remet ton streak à zéro. Protège tes points !</span>
-      </div>
+      </aside>
 
       <h3>Reset de compétences</h3>
       <p>Tu peux réinitialiser toutes tes compétences depuis le menu <code>/skills</code> en faisant un <strong>clic droit</strong> sur la barrière rouge. Cela coûte <strong>10 points</strong>.</p>
@@ -518,10 +526,10 @@ section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
     <section id="skills-intro">
       <h2><span class="ico">🌳</span>Arbre de compétences</h2>
       <p>L'arbre est accessible via <code>/skills</code>. Il contient <strong>25 compétences</strong> réparties en 5 catégories, organisées en tiers de 1 à 5. Il faut débloquer les tiers inférieurs avant d'accéder aux suivants.</p>
-      <div class="callout">
+      <aside class="callout">
         <span class="callout-icon">⭐</span>
         <span>Les compétences <strong>Légendaires (Tier 5)</strong> nécessitent d'avoir effectué au moins <strong>50 kills</strong> sur le serveur pour être débloquées, en plus du coût en points.</span>
-      </div>
+      </aside>
     </section>
 
     <!-- VITESSE -->
@@ -545,10 +553,10 @@ section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
           <tr class="legendary"><td><span class="skill-name"><span class="leg-star">★</span>Éclair</span><span class="active-badge">ACTIF</span></td><td>×2 vitesse pendant 5s — CD 30s</td><td><span class="cost-badge">8 pts</span></td><td><span class="tier-stars">★★★★★</span></td><td class="prereq">Foudre + 50 kills</td></tr>
         </tbody>
       </table>
-      <div class="callout tip" style="margin-top:12px;">
+      <aside class="callout tip tip-skill">
         <span class="callout-icon">💡</span>
         <span>Pour activer Éclair : <code>/skilluse speed_6</code></span>
-      </div>
+      </aside>
     </section>
 
     <!-- FORCE -->
@@ -572,10 +580,10 @@ section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
           <tr class="legendary"><td><span class="skill-name"><span class="leg-star">★</span>Rage</span><span class="active-badge">ACTIF</span></td><td>+100% dégâts pendant 4s — CD 45s</td><td><span class="cost-badge">8 pts</span></td><td><span class="tier-stars">★★★★★</span></td><td class="prereq">Berserker + 50 kills</td></tr>
         </tbody>
       </table>
-      <div class="callout tip" style="margin-top:12px;">
+      <aside class="callout tip tip-skill">
         <span class="callout-icon">💡</span>
         <span>Pour activer Rage : <code>/skilluse str_6</code></span>
-      </div>
+      </aside>
     </section>
 
     <!-- RÉSISTANCE -->
@@ -599,10 +607,10 @@ section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
           <tr class="legendary"><td><span class="skill-name"><span class="leg-star">★</span>Bouclier</span><span class="active-badge">ACTIF</span></td><td>Immunité totale pendant 3s — CD 60s</td><td><span class="cost-badge">8 pts</span></td><td><span class="tier-stars">★★★★★</span></td><td class="prereq">Immortel + 50 kills</td></tr>
         </tbody>
       </table>
-      <div class="callout tip" style="margin-top:12px;">
+      <aside class="callout tip tip-skill">
         <span class="callout-icon">💡</span>
         <span>Pour activer Bouclier : <code>/skilluse res_6</code></span>
-      </div>
+      </aside>
     </section>
 
     <!-- SANTÉ -->
@@ -626,10 +634,10 @@ section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
           <tr class="legendary"><td><span class="skill-name"><span class="leg-star">★</span>Phœnix</span><span class="active-badge">ACTIF</span></td><td>Soin total instantané — CD 60s</td><td><span class="cost-badge">8 pts</span></td><td><span class="tier-stars">★★★★★</span></td><td class="prereq">Titan + 50 kills</td></tr>
         </tbody>
       </table>
-      <div class="callout tip" style="margin-top:12px;">
+      <aside class="callout tip tip-skill">
         <span class="callout-icon">💡</span>
         <span>Pour activer Phœnix : <code>/skilluse hp_6</code></span>
-      </div>
+      </aside>
     </section>
 
     <!-- HYBRIDE -->
@@ -658,31 +666,31 @@ section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
       <h2><span class="ico">📋</span>Commandes</h2>
 
       <h3>Commandes joueur</h3>
-      <table class="cmd-table">
-        <tr><td><code>/skills</code></td><td>Ouvre l'arbre de compétences en GUI</td></tr>
-        <tr><td><code>/points [joueur]</code></td><td>Affiche les stats d'un joueur : points, kills, morts, assists, KDR, streak</td></tr>
-        <tr><td><code>/top</code></td><td>Classement Top 10 kills et Top 10 points du serveur</td></tr>
-        <tr><td><code>/skilluse &lt;id&gt;</code></td><td>Active une compétence légendaire active (voir IDs ci-dessous)</td></tr>
-      </table>
+      <dl class="cmd-list">
+        <div class="cmd-entry"><dt><code>/skills</code></dt><dd>Ouvre l'arbre de compétences en GUI</dd></div>
+        <div class="cmd-entry"><dt><code>/points [joueur]</code></dt><dd>Affiche les stats d'un joueur : points, kills, morts, assists, KDR, streak</dd></div>
+        <div class="cmd-entry"><dt><code>/top</code></dt><dd>Classement Top 10 kills et Top 10 points du serveur</dd></div>
+        <div class="cmd-entry"><dt><code>/skilluse &lt;id&gt;</code></dt><dd>Active une compétence légendaire active (voir IDs ci-dessous)</dd></div>
+      </dl>
 
       <h3>IDs des compétences actives</h3>
-      <div class="papi-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;">
-        <div class="papi-item"><code>speed_6</code><span class="pi-desc">Éclair — vitesse ×2 / 5s</span></div>
-        <div class="papi-item"><code>str_6</code><span class="pi-desc">Rage — dégâts ×2 / 4s</span></div>
-        <div class="papi-item"><code>res_6</code><span class="pi-desc">Bouclier — immunité / 3s</span></div>
-        <div class="papi-item"><code>hp_6</code><span class="pi-desc">Phœnix — soin total</span></div>
-      </div>
+      <ul class="papi-grid cols-4">
+        <li class="papi-item"><code>speed_6</code><span class="pi-desc">Éclair — vitesse ×2 / 5s</span></li>
+        <li class="papi-item"><code>str_6</code><span class="pi-desc">Rage — dégâts ×2 / 4s</span></li>
+        <li class="papi-item"><code>res_6</code><span class="pi-desc">Bouclier — immunité / 3s</span></li>
+        <li class="papi-item"><code>hp_6</code><span class="pi-desc">Phœnix — soin total</span></li>
+      </ul>
 
       <h3>Commandes administrateur</h3>
-      <div class="callout info">
+      <aside class="callout info">
         <span class="callout-icon">🔒</span>
         <span>Ces commandes nécessitent la permission <code>levelsup.admin</code> (opérateur par défaut).</span>
-      </div>
-      <table class="cmd-table">
-        <tr><td><code>/resetskills &lt;joueur&gt;</code></td><td>Réinitialise toutes les compétences d'un joueur</td></tr>
-        <tr><td><code>/givepoints &lt;joueur&gt; &lt;n&gt;</code></td><td>Donne un nombre de points à un joueur</td></tr>
-        <tr><td><code>/doublepoints [on|off]</code></td><td>Active ou désactive les double points manuellement</td></tr>
-      </table>
+      </aside>
+      <dl class="cmd-list">
+        <div class="cmd-entry"><dt><code>/resetskills &lt;joueur&gt;</code></dt><dd>Réinitialise toutes les compétences d'un joueur</dd></div>
+        <div class="cmd-entry"><dt><code>/givepoints &lt;joueur&gt; &lt;n&gt;</code></dt><dd>Donne un nombre de points à un joueur</dd></div>
+        <div class="cmd-entry"><dt><code>/doublepoints [on|off]</code></dt><dd>Active ou désactive les double points manuellement</dd></div>
+      </dl>
     </section>
 
     <!-- TECHNIQUE -->
@@ -694,42 +702,56 @@ section { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
 
       <h3>PlaceholderAPI</h3>
       <p>Le plugin est compatible <strong>PlaceholderAPI</strong>. Tu peux utiliser ces placeholders dans un scoreboard, une tablist ou tout autre plugin compatible :</p>
-      <div class="papi-grid">
-        <div class="papi-item"><code>%levelsup_points%</code><span class="pi-desc">Points disponibles</span></div>
-        <div class="papi-item"><code>%levelsup_kills%</code><span class="pi-desc">Nombre de kills totaux</span></div>
-        <div class="papi-item"><code>%levelsup_deaths%</code><span class="pi-desc">Nombre de morts</span></div>
-        <div class="papi-item"><code>%levelsup_kdr%</code><span class="pi-desc">Ratio kills/morts</span></div>
-        <div class="papi-item"><code>%levelsup_streak%</code><span class="pi-desc">Streak de kills actuel</span></div>
-        <div class="papi-item"><code>%levelsup_skills%</code><span class="pi-desc">Nombre de compétences</span></div>
-        <div class="papi-item"><code>%levelsup_doublepoints%</code><span class="pi-desc">OUI ou NON</span></div>
-        <div class="papi-item"><code>%levelsup_beststreak%</code><span class="pi-desc">Meilleur streak</span></div>
-      </div>
+      <ul class="papi-grid">
+        <li class="papi-item"><code>%levelsup_points%</code><span class="pi-desc">Points disponibles</span></li>
+        <li class="papi-item"><code>%levelsup_kills%</code><span class="pi-desc">Nombre de kills totaux</span></li>
+        <li class="papi-item"><code>%levelsup_deaths%</code><span class="pi-desc">Nombre de morts</span></li>
+        <li class="papi-item"><code>%levelsup_kdr%</code><span class="pi-desc">Ratio kills/morts</span></li>
+        <li class="papi-item"><code>%levelsup_streak%</code><span class="pi-desc">Streak de kills actuel</span></li>
+        <li class="papi-item"><code>%levelsup_skills%</code><span class="pi-desc">Nombre de compétences</span></li>
+        <li class="papi-item"><code>%levelsup_doublepoints%</code><span class="pi-desc">OUI ou NON</span></li>
+        <li class="papi-item"><code>%levelsup_beststreak%</code><span class="pi-desc">Meilleur streak</span></li>
+      </ul>
 
       <h3>Compatibilité</h3>
-      <div class="point-grid">
-        <div class="point-card">
+      <ul class="point-grid">
+        <li class="point-card">
           <div class="pc-label">Serveur</div>
           <div class="pc-val">Spigot / Paper <strong>1.20.4</strong></div>
-        </div>
-        <div class="point-card">
+        </li>
+        <li class="point-card">
           <div class="pc-label">Java</div>
           <div class="pc-val">Java <strong>17</strong> ou supérieur</div>
-        </div>
-        <div class="point-card">
+        </li>
+        <li class="point-card">
           <div class="pc-label">PlaceholderAPI</div>
           <div class="pc-val">Optionnel — auto-détecté</div>
-        </div>
-        <div class="point-card">
+        </li>
+        <li class="point-card">
           <div class="pc-label">Plugin version</div>
           <div class="pc-val">LevelsUp SMP <strong>v2.0.0</strong></div>
-        </div>
-      </div>
+        </li>
+      </ul>
     </section>
 
   </main>
 </div>
 
+<footer style="text-align:center;padding:16px;font-size:13px;color:var(--text2);border-top:1px solid var(--border);">
+  LevelsUp SMP Wiki
+</footer>
+
 <script>
+/* Reusable clipboard copy for IP addresses */
+function copyIP(el) {
+  const ip = 'iplevelsupsmp.falixsrv.me';
+  navigator.clipboard.writeText(ip);
+  const original = el.textContent;
+  el.textContent = '\u2713 Copié !';
+  setTimeout(() => { el.textContent = ip; }, 2000);
+}
+
+/* Active nav highlight on scroll */
 const items = document.querySelectorAll('.nav-item');
 const sections = document.querySelectorAll('section, .hero');
 const obs = new IntersectionObserver(entries => {
